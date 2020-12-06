@@ -1,4 +1,3 @@
-// OUTPUTS
 uint8_t whiteLED_TIE = D8; // GPIO15
 uint8_t blueLED_Xwing = D5; // GPIO14
 uint8_t whiteLED_Xwing = D2; // GPIO4
@@ -15,24 +14,27 @@ void setup() {
           OUTPUT);
 }
 
-// test loop "blink"
+// test loop "blink" (multiple delays to check if wiring is correct)
+// Tested, works fine. Needs millis nonblocking code update or actual interrupts...
 void loop() {
-	digitalWrite(whiteLED_TIE,
-	LOW);
-	digitalWrite(blueLED_Xwing,
-	LOW);
-	digitalWrite(whiteLED_Xwing,
-	LOW);
-	digitalWrite(redLED_Bunker,
-	LOW);
-	delay(1000);
-	digitalWrite(whiteLED_TIE,
-	HIGH);
-	digitalWrite(blueLED_Xwing,
-	HIGH);
-	digitalWrite(whiteLED_Xwing,
-	HIGH);
-	digitalWrite(redLED_Bunker,
-	HIGH);
-	delay(1000);
-}
+        digitalWrite(whiteLED_TIE,
+        LOW);
+        digitalWrite(blueLED_Xwing,
+        LOW);
+        digitalWrite(whiteLED_Xwing,
+        LOW);
+        delay(500);
+        digitalWrite(redLED_Bunker,
+        LOW);
+        delay(500);
+        digitalWrite(whiteLED_TIE,
+        HIGH);
+        digitalWrite(blueLED_Xwing,
+        HIGH);
+        delay(500);
+        digitalWrite(whiteLED_Xwing,
+        HIGH);
+        digitalWrite(redLED_Bunker,
+        HIGH);
+        delay(500);
+}}
