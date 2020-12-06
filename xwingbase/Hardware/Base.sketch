@@ -1,4 +1,26 @@
+// OUTPUTS
 uint8_t whiteLED_TIE = D8; // GPIO15
 uint8_t blueLED_Xwing = D5; // GPIO14
 uint8_t whiteLED_Xwing = D2; // GPIO4
 uint8_t redLED_bunker = D1; // GPIO5
+
+void setup() {
+  pinMode(whiteLED_TIE,
+          OUTPUT);
+  pinMode(blueLED_XWing,
+          OUTPUT);
+  pinMode(whiteLED_Xwing,
+          OUTPUT);
+  pinMode(redLED_Bunker,
+          OUTPUT);
+}
+
+// test loop "blink"
+void loop() {
+	digitalWrite(whiteLED_TIE,
+	LOW);
+	delay(1000);
+	digitalWrite(whiteLED_TIE,
+	HIGH);
+	delay(1000);
+}
