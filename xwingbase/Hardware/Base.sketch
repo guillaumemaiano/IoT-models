@@ -19,8 +19,20 @@ void setup() {
 void loop() {
 	digitalWrite(whiteLED_TIE,
 	LOW);
+	digitalWrite(blueLED_Xwing,
+	LOW);
+	digitalWrite(whiteLED_Xwing,
+	LOW);
+	digitalWrite(redLED_Bunker,
+	LOW);
 	delay(1000);
 	digitalWrite(whiteLED_TIE,
+	HIGH);
+	digitalWrite(blueLED_Xwing,
+	HIGH);
+	digitalWrite(whiteLED_Xwing,
+	HIGH);
+	digitalWrite(redLED_Bunker,
 	HIGH);
 	delay(1000);
 }
