@@ -1,7 +1,7 @@
-uint8_t whiteLED_TIE = D8; // GPIO15
-uint8_t blueLED_Xwing = D5; // GPIO14
+uint8_t whiteLED_TIE = D5; // GPIO14
+uint8_t redLED_Bunker = D8; // GPIO15
 uint8_t whiteLED_Xwing = D2; // GPIO4
-uint8_t redLED_Bunker = D1; // GPIO5
+uint8_t blueLED_Xwing = D1; // GPIO5
 
 void setup() {
   pinMode(whiteLED_TIE,
@@ -17,7 +17,7 @@ void setup() {
 // test loop "blink" (multiple delays to check if wiring is correct)
 // Tested, works fine. Needs millis nonblocking code update or actual interrupts...
 void loop() {
-        digitalWrite(whiteLED_TIE,
+/*        digitalWrite(whiteLED_TIE,
         LOW);
         digitalWrite(blueLED_Xwing,
         LOW);
@@ -37,4 +37,25 @@ void loop() {
         digitalWrite(redLED_Bunker,
         HIGH);
         delay(500);
-}}
+*/
+  bunkerLights();
+}
+
+// basic blocking version of bunker lights
+void bunkerLights() {
+        digitalWrite(redLED_Bunker,
+        LOW);
+	delay(1000);
+        digitalWrite(redLED_Bunker,
+        HIGH);
+	delay(100);
+        digitalWrite(redLED_Bunker,
+        LOW);
+	delay(100);
+        digitalWrite(redLED_Bunker,
+        HIGH);
+	delay(100);
+        digitalWrite(redLED_Bunker,
+        LOW);
+
+}
