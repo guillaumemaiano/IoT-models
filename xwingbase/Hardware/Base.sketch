@@ -45,17 +45,22 @@ void loop() {
 void bunkerLights() {
         digitalWrite(redLED_Bunker,
         LOW);
-	delay(1000);
+        delay(1000);
         digitalWrite(redLED_Bunker,
         HIGH);
-	delay(100);
+        delay(100);
         digitalWrite(redLED_Bunker,
         LOW);
-	delay(100);
+        delay(100);
         digitalWrite(redLED_Bunker,
         HIGH);
-	delay(100);
+        delay(100);
         digitalWrite(redLED_Bunker,
         LOW);
 
+}
+
+void droidLight() {
+  randomSeed();
+  //beeps = random(0,15);
 }
