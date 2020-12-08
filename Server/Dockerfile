@@ -6,6 +6,7 @@ LABEL Maintainer="Guillaume Maiano <guillaume@maiano.fr>" \
 
 # Install packages
 RUN apk --no-cache add mosquitto
+RUN apk --no-cache add gopass
 # Clients might be useful for testing runs
 #RUN apl --no-cache add mosquitto-clients
 # Use the client to subscribe on a topic
