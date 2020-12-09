@@ -9,6 +9,12 @@ const unsigned long large_silence_interval = 1000;
 const unsigned long short_silence_interval = 100;
 const unsigned long short_emission_interval = 100;
 
+// time tracker definitions
+unsigned long time_tracker_millis_bunker = 0; // bunkerLights routine
+
+// triggers for the routines
+bool isBunkerRoutineActive = true;
+
 // initialize four leds as outputs
 void setup() {
   pinMode(whiteLED_TIE,
@@ -23,24 +29,36 @@ void setup() {
 
 // stripped loop calling the red led routine
 void loop() {
-  bunkerLights();
+	if (isBunkerRoutineActive) {
+  		bunkerLights();
+	}
 }
 
-// basic blocking version of bunker lights
+// basic non-blocking version of bunker lights
+// uses only one tracker, computes the durations on the fly every iteration (unoptimized, more readable)
 void bunkerLights() {
-        digitalWrite(redLED_Bunker,
+	// shut the led at loop start
+        	digitalWrite(redLED_Bunker,
         LOW);
-        delay(large_silence_interval);
-        digitalWrite(redLED_Bunker,
-        HIGH);
-        delay(short_emission_interval);
-        digitalWrite(redLED_Bunker,
-        LOW);
-        delay(short_silence_interval);
-        digitalWrite(redLED_Bunker,
-        HIGH);
-        delay(short_emission_interval);
-        digitalWrite(redLED_Bunker,
-        LOW);
-
+	// turn the led on for the first point
+	if (millis() > large_silence_interval + time_tracker_millis_bunker) {
+        	digitalWrite(redLED_Bunker,
+        	HIGH);
+	}
+	// shut the led after the first point
+	if (millis() > large_silence_interval + short_emission_interval + time_tracker_millis_bunker) {
+        	digitalWrite(redLED_Bunker,
+        	LOW);
+	}
+	// turn the led on for the second point
+	if (millis() > large_silence_interval + short_emission_interval + short_silence_interval + time_tracker_millis_bunker) {
+        	digitalWrite(redLED_Bunker,
+        	HIGH);
+	}
+	// shut the led after the second point and updates the tracker for next loop
+	if (millis() > large_silence_interval + short_emission_interval + short_silence_interval + short_emission_interval + time_tracker_millis_bunker) {
+        	time_tracker_millis_bunker = millis();	
+		digitalWrite(redLED_Bunker,
+        	LOW);
+	}
 }
