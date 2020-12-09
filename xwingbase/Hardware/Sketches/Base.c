@@ -36,6 +36,10 @@ struct DroidLightsParameters {
 
 struct DroidLightsParameters droidLightsParameters;
 
+// routines declaration
+void setupDroidLights(struct DroidLightsParameters*);
+void droidLights(struct DroidLightsParameters*);
+
 // hardware setup
 void setup() {
   pinMode(whiteLED_TIE,
@@ -53,7 +57,7 @@ void loop() {
   if (isBunkerRoutineActive) {
     bunkerLights();
   }
-  droidLights(*droidLightsParameters);
+  droidLights(&droidLightsParameters);
 }
 
 // basic non-blocking version of bunker lights
@@ -68,49 +72,50 @@ void bunkerLights() {
 void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
   // prep randoms
   randomSeed(analogRead(0));
-  droidLightsParameters.beeps = random(1, maxDuration);
-  int points[droidLightsParameters.beeps];
-  for (int point = 0; point < beeps; point++) {
+  droidLightsParameters->beeps = random(1, droidLightsParameters->maxDuration);
+  int points[droidLightsParameters->beeps];
+  for (int point = 0; point < droidLightsParameters->beeps; point++) {
         int pointLength = random(0,4); // if 3, then point is a blank
         if (pointLength == 3) {
                 points[point] = 0; // standard empty point is 270ms long
         } else {
-          points[point] = droidLightsParameters.durations[pointLength];
+          points[point] = droidLightsParameters->durations[pointLength];
         }
   }
   droidLightsParameters->points = &points;
+  droidLightsParameters->isDroidSetup =  true;
 }
 
 void droidLights(struct DroidLightsParameters * droidLightsParameters) {
-  if (!droidLightsParameters.isDroidSetup) {
-    droidLightsParameters.isDroidSetup = setupDroidLights();
+  if (!droidLightsParameters->isDroidSetup) {
+     setupDroidLights(droidLightsParameters);
   }
   // execute blocking basic loop
   // Turn off Droid LED at loop start
   digitalWrite(blueLED_Xwing,
         LOW);
   int currentDuration = 0;
-  for (int currentPoint = 0; currentPoint < droidLightsParameters.beeps && currentDuration < droidLightsParameters.maxDuration; currentPoint++) {
-        if (points[currentPoint] == 0){
+  for (int currentPoint = 0; currentPoint < droidLightsParameters->beeps && currentDuration < droidLightsParameters->maxDuration; currentPoint++) {
+        if (droidLightsParameters->points[currentPoint] == 0){
                 // make sure that led *is* off, as it should be
                 digitalWrite(blueLED_Xwing,
                 LOW);
-                delay(droidLightsParameters.defaultDuration);
-                currentDuration += droidLightsParameters.defaultDuration;
+                delay(droidLightsParameters->defaultDuration);
+                currentDuration += droidLightsParameters->defaultDuration;
         } else {
-                int value = droidLightsParameters.points[currentPoint];
+                int value = droidLightsParameters->points[currentPoint];
                 digitalWrite(blueLED_Xwing,
                 HIGH);
                 delay(value);
                 currentDuration += value;
                 digitalWrite(blueLED_Xwing,
                 LOW);
-                delay(droidLightsParameters.separationInterval);
+                delay(droidLightsParameters->separationInterval);
         }
   }
-  droidLightsParameters.isDroidSetup = false;
-  if (droidLightsParameters.beeps != 0) {
-  	free(droidLightsParameters.points);
-	droidLightsParameters.beeps = 0;
+  droidLightsParameters->isDroidSetup = false;
+  if (droidLightsParameters->beeps != 0) {
+		free(droidLightsParameters->points);
+		droidLightsParameters->beeps = 0;
   }
 }
