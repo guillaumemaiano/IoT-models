@@ -39,7 +39,7 @@ struct DroidLightsParameters droidLightsParameters;
 // routines declaration
 void setupDroidLights(struct DroidLightsParameters*);
 void droidLights(struct DroidLightsParameters*);
-void setDroidLightStatus(int currentPoint);
+void setDroidLightStatus(int, struct DroidLightsParameters*);
 
 bool isDroidRoutineActive = true;
 
@@ -55,6 +55,7 @@ void setup() {
           OUTPUT);
 #ifdef DEBUG
   Serial.begin(115200);
+  Serial.println("Debug mode enabled");
 #endif
 }
 
@@ -91,8 +92,6 @@ void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
   }
   // reset the time tracker now that the cycle is done or set it for the first time
   time_tracker_millis_droid = millis();
-  // reset the duration tracker
-  int currentDuration = 0;
   // Turn off Droid LED at loop start
   digitalWrite(blueLED_Xwing,
         LOW);
@@ -124,7 +123,8 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
   }
   // note: there are a wealth of optimizations to be done, but let's get this working before we try smartness...
   // note: so very similar to the previous loop, but it needs the loop result, doesn't it?
-  int intervals[cutOffPoint] = {0};// TODO: is it cutOffPoint or cutOffPoint+1?
+  int *intervals = (int*) calloc(cutOffPoint,sizeof(int));
+  // TODO: is it cutOffPoint or cutOffPoint+1?
   for (int currentPoint = 0; currentPoint < cutOffPoint; currentPoint++) {
   	int intervalDuration = 0;
 	// obviously, the first point doesn't have a preceding point with a non-zero interval...
@@ -132,11 +132,11 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
           intervalDuration = intervals[currentPoint - 1];	
 	}
         // special case: silent point
-	if (droidLightsParameters->points[point] == 0){
+	if (droidLightsParameters->points[currentPoint] == 0){
 		
 		intervalDuration += droidLightsParameters->defaultDuration;
 	} else {
-		intervalDuration += droidLightsParameters->points[point];
+		intervalDuration += droidLightsParameters->points[currentPoint];
 	}
 	intervals[currentPoint] = intervalDuration;
         
@@ -148,13 +148,13 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 	
 	if (currentPoint == 0) {
 		if (currentTimeInterval < intervals[currentPoint]) {
-			setDroidLightStatus(currentPoint);
+			setDroidLightStatus(currentPoint, droidLightsParameters);
 			break;
 		}
 	}
 	if (currentPoint == cutOffPoint - 1) {
 		if (currentTimeInterval > intervals[currentPoint]) {
-			setDroidLightStatus(currentPoint);
+			setDroidLightStatus(currentPoint, droidLightsParameters);
 			droidLightsParameters->isDroidSetup = false;
 			break;
 		}
@@ -162,15 +162,15 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 	}
 
 	if ( currentTimeInterval > intervals[currentPoint - 1] && currentTimeInterval < intervals[currentPoint]) {
-		setDroidLightStatus(currentPoint);
+		setDroidLightStatus(currentPoint, droidLightsParameters);
 		break;
 	}
   }
-  // reclaim this memory for next loop //TODO: is that appropriate
+  // reclaim this memory for next loop
   free(intervals);
 }
 
-void setDroidLightStatus(int currentPoint) {
+void setDroidLightStatus(int currentPoint, struct DroidLightsParameters * droidLightsParameters) {
         // make sure that led *is* off, as it should be
         digitalWrite(blueLED_Xwing,
                 LOW);
