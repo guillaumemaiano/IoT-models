@@ -53,8 +53,8 @@ void setup() {
           OUTPUT);
   pinMode(redLED_Bunker,
           OUTPUT);
-#ifdef DEBUG
-  Serial.begin(115200);
+#ifdef DEBUG_SERIAL
+  Serial.begin(74880); // 115200 bauds in-source log works, but the reboot log demands 74880 bauds, so we'll use that instead
   Serial.println("Debug mode enabled");
 #endif
 }
@@ -152,8 +152,9 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 			break;
 		}
 	}
+	int sumOfDelays = currentPoint * droidLightsParameters->separationInterval;
 	if (currentPoint == cutOffPoint - 1) {
-		if (currentTimeInterval > intervals[currentPoint]) {
+		if (currentTimeInterval > intervals[currentPoint] + sumOfDelays) { 
 			setDroidLightStatus(currentPoint, droidLightsParameters);
 			droidLightsParameters->isDroidSetup = false;
 			break;
@@ -161,7 +162,7 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 	// TODO: verify if I'm missing a point
 	}
 
-	if ( currentTimeInterval > intervals[currentPoint - 1] && currentTimeInterval < intervals[currentPoint]) {
+	if ( currentTimeInterval > intervals[currentPoint - 1] + sumOfDelays && currentTimeInterval < intervals[currentPoint] + sumOfDelays) {
 		setDroidLightStatus(currentPoint, droidLightsParameters);
 		break;
 	}
