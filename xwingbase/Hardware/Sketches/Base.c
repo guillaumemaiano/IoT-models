@@ -25,13 +25,12 @@ bool isBunkerRoutineActive = true;
 struct DroidLightsParameters {
   const int defaultDuration = 270; // ceil(4 seconds /15 points)
   const int maxDuration = 4000; // max duration of a cycle in milliseconds
-  const int maxPoints = 15; // max occurrences of a "point" (up signal of varying length)
+  static const int maxPoints = 15; // max occurrences of a "point" (up signal of varying length)
   const int durations[3] = {100, 300, 500}; // possible durations of a point (short, medium, long)
   const int separationInterval = 100; // a millisecond duration to separate "points" visually
   bool isDroidSetup = false; // needs to be set to false every time the non-blocking routine completes a full run
   int beeps = 0;
-  int points[0]; // flexible array members do not work with Arduino IDE (GCC 5.4.0, 6 required...)
-  // attempting systematic free-and-overwrite
+  int points[maxPoints] = {0}; // there will never be more points than maxPoints anyway, and variable arrays introduce fragmentation in Arduinos that lead to early stops of the program. Variable array = bad. I should have listened to Captain C++ after all.
 };
 
 struct DroidLightsParameters droidLightsParameters;
@@ -72,17 +71,15 @@ void bunkerLights() {
 void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
   // prep randoms
   randomSeed(analogRead(0));
-  droidLightsParameters->beeps = random(1, droidLightsParameters->maxDuration);
-  int points[droidLightsParameters->beeps];
+  droidLightsParameters->beeps = random(1, droidLightsParameters->maxPoints);
   for (int point = 0; point < droidLightsParameters->beeps; point++) {
         int pointLength = random(0,4); // if 3, then point is a blank
         if (pointLength == 3) {
-                points[point] = 0; // standard empty point is 270ms long
+                droidLightsParameters->points[point] = 0; // standard empty point is 270ms long
         } else {
-          points[point] = droidLightsParameters->durations[pointLength];
+          droidLightsParameters->points[point] = droidLightsParameters->durations[pointLength];
         }
   }
-  droidLightsParameters->points = &points;
   droidLightsParameters->isDroidSetup =  true;
 }
 
@@ -114,8 +111,4 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
         }
   }
   droidLightsParameters->isDroidSetup = false;
-  if (droidLightsParameters->beeps != 0) {
-		free(droidLightsParameters->points);
-		droidLightsParameters->beeps = 0;
-  }
 }
