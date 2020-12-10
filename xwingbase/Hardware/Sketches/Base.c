@@ -39,6 +39,8 @@ struct DroidLightsParameters droidLightsParameters;
 void setupDroidLights(struct DroidLightsParameters*);
 void droidLights(struct DroidLightsParameters*);
 
+bool isDroidRoutineActive = true;
+
 // hardware setup
 void setup() {
   pinMode(whiteLED_TIE,
@@ -56,7 +58,9 @@ void loop() {
   if (isBunkerRoutineActive) {
     bunkerLights();
   }
-  droidLights(&droidLightsParameters);
+  if (isDroidRoutineActive) {
+    droidLights(&droidLightsParameters);
+  }
 }
 
 // basic non-blocking version of bunker lights
@@ -80,6 +84,8 @@ void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
           droidLightsParameters->points[point] = droidLightsParameters->durations[pointLength];
         }
   }
+  // reset the time tracker now that the cycle is done or set it for the first time
+  time_tracker_millis_droid = millis();
   droidLightsParameters->isDroidSetup =  true;
 }
 
@@ -87,7 +93,7 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
   if (!droidLightsParameters->isDroidSetup) {
      setupDroidLights(droidLightsParameters);
   }
-  // execute blocking basic loop
+  // execute non blocking loop
   // Turn off Droid LED at loop start
   digitalWrite(blueLED_Xwing,
         LOW);
@@ -97,6 +103,7 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
                 // make sure that led *is* off, as it should be
                 digitalWrite(blueLED_Xwing,
                 LOW);
+		//  TODO: replace those three delays with appropriate millis() comparisons with time_tracker_millis_droid
                 delay(droidLightsParameters->defaultDuration);
                 currentDuration += droidLightsParameters->defaultDuration;
         } else {
