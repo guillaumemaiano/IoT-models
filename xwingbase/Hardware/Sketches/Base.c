@@ -39,6 +39,7 @@ struct DroidLightsParameters droidLightsParameters;
 // routines declaration
 void setupDroidLights(struct DroidLightsParameters*);
 void droidLights(struct DroidLightsParameters*);
+void setDroidLightStatus(int currentPoint);
 
 bool isDroidRoutineActive = true;
 
@@ -123,7 +124,7 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
   }
   // note: there are a wealth of optimizations to be done, but let's get this working before we try smartness...
   // note: so very similar to the previous loop, but it needs the loop result, doesn't it?
-  int intervals[cutOffPoint] = {0};
+  int intervals[cutOffPoint] = {0};// TODO: is it cutOffPoint or cutOffPoint+1?
   for (int currentPoint = 0; currentPoint < cutOffPoint; currentPoint++) {
   	int intervalDuration = 0;
 	// obviously, the first point doesn't have a preceding point with a non-zero interval...
@@ -140,28 +141,41 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 	intervals[currentPoint] = intervalDuration;
         
   }
-  // execute non blocking loop
+  // freeze the current time point
+  int currentTimeInterval = millis() - time_tracker_millis_droid; // will be negative if millis rolls over, which won't happen given the small battery the model uses
+  // execute non blocking loop -- blocking defined as "uses delay"
   for (int currentPoint = 0; currentPoint < cutOffPoint; currentPoint++) {
-        if (droidLightsParameters->points[currentPoint] == 0){
-                // make sure that led *is* off, as it should be
-                digitalWrite(blueLED_Xwing,
-                LOW);
-		
-		//  TODO: replace those three delays with appropriate millis() comparisons with time_tracker_millis_droid
-                //delay(droidLightsParameters->defaultDuration);
-                currentDuration += droidLightsParameters->defaultDuration;
-        } else {
-                int value = droidLightsParameters->points[currentPoint];
-                digitalWrite(blueLED_Xwing,
-                HIGH);
-                delay(value);
-                currentDuration += value;
-                digitalWrite(blueLED_Xwing,
-                LOW);
-                delay(droidLightsParameters->separationInterval);
-        }
+	
+	if (currentPoint == 0) {
+		if (currentTimeInterval < intervals[currentPoint]) {
+			setDroidLightStatus(currentPoint);
+			break;
+		}
+	}
+	if (currentPoint == cutOffPoint - 1) {
+		if (currentTimeInterval > intervals[currentPoint]) {
+			setDroidLightStatus(currentPoint);
+			droidLightsParameters->isDroidSetup = false;
+			break;
+		}
+	// TODO: verify if I'm missing a point
+	}
+
+	if ( currentTimeInterval > intervals[currentPoint - 1] && currentTimeInterval < intervals[currentPoint]) {
+		setDroidLightStatus(currentPoint);
+		break;
+	}
   }
   // reclaim this memory for next loop //TODO: is that appropriate
   free(intervals);
-  droidLightsParameters->isDroidSetup = false;
+}
+
+void setDroidLightStatus(int currentPoint) {
+        // make sure that led *is* off, as it should be
+        digitalWrite(blueLED_Xwing,
+                LOW);
+        if (droidLightsParameters->points[currentPoint] != 0){
+                digitalWrite(blueLED_Xwing,
+                HIGH);
+        }
 }
