@@ -1,3 +1,4 @@
+#define DEBUG_SERIAL false
 // GPIO definitions
 // *********
 const uint8_t whiteLED_TIE = D5; // GPIO14
@@ -51,6 +52,9 @@ void setup() {
           OUTPUT);
   pinMode(redLED_Bunker,
           OUTPUT);
+#ifdef DEBUG
+  Serial.begin(115200);
+#endif
 }
 
 // main loop runs perpetually after setup has run
@@ -86,25 +90,65 @@ void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
   }
   // reset the time tracker now that the cycle is done or set it for the first time
   time_tracker_millis_droid = millis();
+  // reset the duration tracker
+  int currentDuration = 0;
+  // Turn off Droid LED at loop start
+  digitalWrite(blueLED_Xwing,
+        LOW);
   droidLightsParameters->isDroidSetup =  true;
 }
 
 void droidLights(struct DroidLightsParameters * droidLightsParameters) {
+  // prep parameters if appropriate
   if (!droidLightsParameters->isDroidSetup) {
      setupDroidLights(droidLightsParameters);
   }
+  // prep non-blocking execution loop
+  int cutOffPoint = 0;
+  int cutOffDuration = 0;
+  for (int point = 0; point < droidLightsParameters->beeps; point++) {
+        // special case: silent point
+	if (droidLightsParameters->points[point] == 0){
+		cutOffDuration += droidLightsParameters->defaultDuration;
+	} else {
+		cutOffDuration += droidLightsParameters->points[point];
+	}
+	cutOffPoint = point;
+
+	// we reached an early termination of the cycle due to cumulated length of points exceeding the maximum message length (cycle duration)
+	if (cutOffDuration >= droidLightsParameters->maxDuration) {
+		break; // this will freeze cut-off values as-is for the execution loop
+	}
+  	
+  }
+  // note: there are a wealth of optimizations to be done, but let's get this working before we try smartness...
+  // note: so very similar to the previous loop, but it needs the loop result, doesn't it?
+  int intervals[cutOffPoint] = {0};
+  for (int currentPoint = 0; currentPoint < cutOffPoint; currentPoint++) {
+  	int intervalDuration = 0;
+	// obviously, the first point doesn't have a preceding point with a non-zero interval...
+	if (currentPoint != 0) {
+          intervalDuration = intervals[currentPoint - 1];	
+	}
+        // special case: silent point
+	if (droidLightsParameters->points[point] == 0){
+		
+		intervalDuration += droidLightsParameters->defaultDuration;
+	} else {
+		intervalDuration += droidLightsParameters->points[point];
+	}
+	intervals[currentPoint] = intervalDuration;
+        
+  }
   // execute non blocking loop
-  // Turn off Droid LED at loop start
-  digitalWrite(blueLED_Xwing,
-        LOW);
-  int currentDuration = 0;
-  for (int currentPoint = 0; currentPoint < droidLightsParameters->beeps && currentDuration < droidLightsParameters->maxDuration; currentPoint++) {
+  for (int currentPoint = 0; currentPoint < cutOffPoint; currentPoint++) {
         if (droidLightsParameters->points[currentPoint] == 0){
                 // make sure that led *is* off, as it should be
                 digitalWrite(blueLED_Xwing,
                 LOW);
+		
 		//  TODO: replace those three delays with appropriate millis() comparisons with time_tracker_millis_droid
-                delay(droidLightsParameters->defaultDuration);
+                //delay(droidLightsParameters->defaultDuration);
                 currentDuration += droidLightsParameters->defaultDuration;
         } else {
                 int value = droidLightsParameters->points[currentPoint];
@@ -117,5 +161,7 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
                 delay(droidLightsParameters->separationInterval);
         }
   }
+  // reclaim this memory for next loop //TODO: is that appropriate
+  free(intervals);
   droidLightsParameters->isDroidSetup = false;
 }
