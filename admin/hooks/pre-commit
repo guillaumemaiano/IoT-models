@@ -2,7 +2,7 @@
 LC_ALL=C
 local_branch="$(git rev-parse --abbrev-ref HEAD)"
 echo "Verifying branch $local_branch".
-valid_branch_regex="^(feature|bugfix|improvement|library|prerelease|release|hotfix|admin)(\/experiments)?(\/[a-z0-9._-]+)+$"
+valid_branch_regex="^(feature|bugfix|improvement|library|prerelease|release|hotfix|admin)(\/experiments|\/refactor)?(\/[a-z0-9._-]+)+$"
 message="Invalid branch name. Branch names in this project must be of the form  $valid_branch_regex."
 if [[ ! $local_branch =~ $valid_branch_regex ]]
 then
