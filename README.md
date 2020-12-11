@@ -10,7 +10,9 @@ If the board spews garbage to the console, check the baudrate in the code and in
 ## Branches
 
 Stable branch is 'main'
+
 Unstable branch is 'develop'
+
 Code goes in work branches defined by [this precommit hook](https://github.com/guillaumemaiano/IoT-models/blob/develop/admin/hooks/pre-commit), then is PR'ed and validated.
 
 Since I'm alone, it's mostly to get the benefit of a second web-based diff check, and if I ever get around to having a test suite, maybe do that too ;)
