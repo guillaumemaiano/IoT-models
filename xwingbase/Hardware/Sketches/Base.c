@@ -180,7 +180,9 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 				break;
 			}
 		}
-
+       		 // shutdown the droid LED, lest it stays on during the separating pauses!
+               digitalWrite(blueLED_Xwing,
+                           LOW);
 		if ( currentTimeInterval > intervals[currentPoint - 1] + sumOfDelays && currentTimeInterval < intervals[currentPoint] + sumOfDelays) {
 			setDroidLightStatus(currentPoint, droidLightsParameters);
 			break;
