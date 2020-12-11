@@ -78,18 +78,12 @@ void bunkerLights() {
 	// turn the led on for the first point
 
 	if (millis() > large_silence_interval + time_tracker_millis_bunker) {
-	}		 	        
 	digitalWrite(redLED_Bunker,
 			HIGH);
-	void droidLight() {
 	}
-	int maxDuration = 5000; // max duration of a cycle in milliseconds
 	// shut the led after the first point
-	int maxPoints = 15; //
 	if (millis() > large_silence_interval + short_emission_interval + time_tracker_millis_bunker) {
-		randomSeed();
 		digitalWrite(redLED_Bunker,
-				//beeps = random(0,15);
 				LOW);
 	}
 	// turn the led on for the second point
