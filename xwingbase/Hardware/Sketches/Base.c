@@ -144,9 +144,8 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 	}
 	// note: there are a wealth of optimizations to be done, but let's get this working before we try smartness...
 	// note: so very similar to the previous loop, but it needs the loop result, doesn't it?
-	int *intervals = (int*) calloc(cutOffPoint,sizeof(int));
-	// TODO: is it cutOffPoint or cutOffPoint+1?
-	for (int currentPoint = 0; currentPoint < cutOffPoint; currentPoint++) {
+	int *intervals = (int*) calloc(cutOffPoint+1,sizeof(int));
+	for (int currentPoint = 0; currentPoint < cutOffPoint + 1; currentPoint++) {
 		int intervalDuration = 0;
 		// obviously, the first point doesn't have a preceding point with a non-zero interval...
 		if (currentPoint != 0) {
@@ -165,7 +164,7 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 	// freeze the current time point
 	int currentTimeInterval = millis() - time_tracker_millis_droid; // will be negative if millis rolls over, which won't happen given the small battery the model uses
 	// execute non blocking loop -- blocking defined as "uses delay"
-	for (int currentPoint = 0; currentPoint < cutOffPoint; currentPoint++) {
+	for (int currentPoint = 0; currentPoint < cutOffPoint + 1; currentPoint++) {
 
 		if (currentPoint == 0) {
 			if (currentTimeInterval < intervals[currentPoint]) {
@@ -174,15 +173,16 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 			}
 		}
 		int sumOfDelays = currentPoint * droidLightsParameters->separationInterval;
-		if (currentPoint == cutOffPoint - 1) {
+		if (currentPoint == cutOffPoint) {
 			if (currentTimeInterval > intervals[currentPoint] + sumOfDelays) { 
 				setDroidLightStatus(currentPoint, droidLightsParameters);
 				droidLightsParameters->isDroidSetup = false;
 				break;
 			}
-			// TODO: verify if I'm missing a point
 		}
-
+       		 // shutdown the droid LED, lest it stays on during the separating pauses!
+               digitalWrite(blueLED_Xwing,
+                           LOW);
 		if ( currentTimeInterval > intervals[currentPoint - 1] + sumOfDelays && currentTimeInterval < intervals[currentPoint] + sumOfDelays) {
 			setDroidLightStatus(currentPoint, droidLightsParameters);
 			break;
