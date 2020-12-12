@@ -1,4 +1,4 @@
-#include "Arduino.h"
+extern static const int maxPoints;
 
 // datastructure for routine
 struct DroidLightsParameters droidLightsParameters;
