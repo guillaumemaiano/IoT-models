@@ -1,5 +1,5 @@
-#import "Lights.h"
-#import "Lights_Droid.h"
+#include "Lights.h"
+#include "Lights_Droid.h"
 
 unsigned long time_tracker_millis_droid = 0; // checks time elapsed since cycle started
 

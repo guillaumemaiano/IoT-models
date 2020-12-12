@@ -1,5 +1,5 @@
-#import "Lights.h"
-#import "Lights_Bunker.h"
+#include "Lights.h"
+#include "Lights_Bunker.h"
 
 // time tracker
 unsigned long time_tracker_millis_bunker = 0; // checks time elapsed since cycle started
