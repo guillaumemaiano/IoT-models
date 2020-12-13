@@ -5,6 +5,13 @@
 
 #define DEBUG_SERIAL false
 
+// GPIO definitions
+// *********
+extern const uint8_t whiteLED_TIE = D5; // GPIO14
+extern const uint8_t redLED_Bunker = D8; // GPIO15
+extern const uint8_t whiteLED_Xwing = D2; // GPIO4
+extern const uint8_t blueLED_Xwing = D1; // GPIO5
+
 // triggers for the routines
 bool isBunkerRoutineActive = true;
 bool isDroidRoutineActive = true;

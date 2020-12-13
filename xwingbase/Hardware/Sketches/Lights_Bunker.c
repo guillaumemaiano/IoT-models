@@ -1,6 +1,8 @@
 #include "Lights.h"
 #include "Lights_Bunker.h"
 
+extern const uint8_t redLED_Bunker;
+
 // time tracker
 unsigned long time_tracker_millis_bunker = 0; // checks time elapsed since cycle started
 

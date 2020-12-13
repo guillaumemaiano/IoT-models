@@ -1,6 +1,9 @@
 #include "Lights.h"
 #include "Lights_Droid.h"
 
+// Needed because the pin definition is trickier than it looks (Arduino IDE adding dependencies)
+extern const uint8_t blueLED_Xwing;
+
 unsigned long time_tracker_millis_droid = 0; // checks time elapsed since cycle started
 
 void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
