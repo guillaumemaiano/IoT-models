@@ -15,6 +15,7 @@ extern const uint8_t blueLED_Xwing = D1; // GPIO5
 // triggers for the routines
 bool isBunkerRoutineActive = true;
 bool isDroidRoutineActive = true;
+bool isTIERoutineActive = true;
 
 // hardware setup
 void setup() {
@@ -39,5 +40,10 @@ void loop() {
 	}
 	if (isDroidRoutineActive) {
 		droidLights(&droidLightsParameters);
+	}
+	if (isTIERoutineActive) {
+		// run-once or it will blink at loop-rate and look dimmed...
+		isTIERoutineActive = false;
+		fighterTIELights();
 	}
 }
