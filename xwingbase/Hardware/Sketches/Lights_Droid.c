@@ -8,10 +8,10 @@ unsigned long time_tracker_millis_droid = 0; // checks time elapsed since cycle 
 
 void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
 	// prep randoms
-	randomSeed(analogRead(0));
-	droidLightsParameters->beeps = random(1, maxPoints);
+	srand(analogRead(0));
+	droidLightsParameters->beeps = (rand()+1)%maxPoints;
 	for (int point = 0; point < droidLightsParameters->beeps; point++) {
-		int pointLength = random(0,4); // if 3, then point is a blank
+	    int pointLength = rand()%4;//(0,4); // if 3, then point is a blank
 		if (pointLength == 3) {
 			droidLightsParameters->points[point] = 0; // standard empty point is 270ms long
 		} else {
