@@ -25,6 +25,7 @@ struct DroidLightsParameters droidLightsParameters;
  #endif
 // routines declaration
  void bunkerLights();
+ void fighterTIELights();
  void droidLights(struct DroidLightsParameters*);
  #ifdef __cplusplus
  }
