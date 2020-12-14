@@ -16,9 +16,10 @@ extern const uint8_t blueLED_Xwing = D1; // GPIO5
 bool isBunkerRoutineActive = true;
 bool isDroidRoutineActive = true;
 bool isTIERoutineActive = true;
+bool isXWingBoardRoutineActive = true;
 
-// hardware setup
 void setup() {
+	// hardware setup
 	pinMode(whiteLED_TIE,
 			OUTPUT);
 	pinMode(blueLED_Xwing,
@@ -31,6 +32,8 @@ void setup() {
 	Serial.begin(74880); // 115200 bauds in-source log works, but the reboot log demands 74880 bauds, so we'll use that instead
 	Serial.println("Debug mode enabled");
 #endif
+	//software setup
+	prepareXWing(&xwingLightsParameters);
 }
 
 // main loop runs perpetually after setup has run
@@ -45,5 +48,8 @@ void loop() {
 		// run-once or it will blink at loop-rate and look dimmed...
 		isTIERoutineActive = false;
 		fighterTIELights();
+	}
+	if (isXWingBoardRoutineActive) {
+		xwingLights(&xwingLightsParameters);
 	}
 }

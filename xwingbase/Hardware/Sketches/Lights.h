@@ -16,8 +16,16 @@ struct DroidLightsParameters {
 	int points[maxPoints] ; // there will never be more points than maxPoints anyway, and variable arrays introduce fragmentation in Arduinos that lead to early stops of the program. Variable array = bad.
 };
 
-// datastructure for routine
+
+// structure to pass data through the xwingLights routine
+struct XWingLightsParameters {
+	bool isXWingOn; // mirrors the HIGH/LOW state of the whiteLEDXWing
+	int cycleTime;
+};
+
+// datastructures for routines
 struct DroidLightsParameters droidLightsParameters;
+struct XWingLightsParameters xwingLightsParameters;
 
 // name-mangling in CPP
  #ifdef __cplusplus
@@ -26,6 +34,7 @@ struct DroidLightsParameters droidLightsParameters;
 // routines declaration
  void bunkerLights();
  void fighterTIELights();
+ void xwingLights(struct XWingLightsParameters*);
  void droidLights(struct DroidLightsParameters*);
  #ifdef __cplusplus
  }
