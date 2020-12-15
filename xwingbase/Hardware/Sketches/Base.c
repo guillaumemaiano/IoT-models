@@ -6,6 +6,8 @@
 
 #define DEBUG_SERIAL true
 
+#define LED_PINS 4
+
 // GPIO 
 // *********
 extern const uint8_t blueLED_Xwing = D1; // GPIO5
@@ -13,9 +15,9 @@ extern const uint8_t whiteLED_Xwing = D2; // GPIO4
 extern const uint8_t whiteLED_TIE = D5; // GPIO14
 extern const uint8_t redLED_Bunker = D8; // GPIO15
 
-extern const int ledsPinsAvailable = 4;
+extern const int ledsPinsAvailable = LED_PINS;
 
-extern const uint8_t ledPins[4] = {
+extern const uint8_t ledPins[LED_PINS] = {
 	whiteLED_TIE,
 	redLED_Bunker,
 	whiteLED_Xwing,
