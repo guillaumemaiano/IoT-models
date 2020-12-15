@@ -21,10 +21,10 @@ int statusWifiConnection;
 WiFiClient wifiClient;
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
-void signalConnectionFailure(bool log);
-void testConnection();
+	void signalConnectionFailure(bool log);
+	void testConnection();
 #ifdef __cplusplus
- } 
+} 
 #endif

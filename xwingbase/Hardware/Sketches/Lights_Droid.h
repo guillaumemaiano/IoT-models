@@ -3,8 +3,8 @@
 extern "C" {
 #endif
 
-void setupDroidLights(struct DroidLightsParameters*);
-void setDroidLightStatus(int, struct DroidLightsParameters*);
+	void setupDroidLights(struct DroidLightsParameters*);
+	void setDroidLightStatus(int, struct DroidLightsParameters*);
 
 #ifdef __cplusplus
 }

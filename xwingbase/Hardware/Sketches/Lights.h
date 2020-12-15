@@ -16,7 +16,7 @@ extern const uint8_t ledPins[4];
 extern bool wifiErrorSignalActive;
 
 enum ErrorLEDDisplay {
-  WiFi = 0
+	WiFi = 0
 };
 
 // structure to pass data through the droidLights routine
@@ -30,16 +30,16 @@ struct DroidLightsParameters {
 struct DroidLightsParameters droidLightsParameters;
 
 // name-mangling in CPP
- #ifdef __cplusplus
- extern "C" {
- #endif
-// helper utilities
- void deactivateRoutines();
- void blinkError(ErrorLEDDisplay);
-// routines declaration
- void bunkerLights();
- void fighterTIELights();
- void droidLights(struct DroidLightsParameters*);
- #ifdef __cplusplus
- }
- #endif
+#ifdef __cplusplus
+extern "C" {
+#endif
+	// helper utilities
+	void deactivateRoutines();
+	void blinkError(ErrorLEDDisplay);
+	// routines declaration
+	void bunkerLights();
+	void fighterTIELights();
+	void droidLights(struct DroidLightsParameters*);
+#ifdef __cplusplus
+}
+#endif

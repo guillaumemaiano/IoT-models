@@ -43,16 +43,16 @@ void setup() {
 	Serial.begin(74880); // 115200 bauds in-source log works, but the reboot log demands 74880 bauds, so we'll use that instead
 	Serial.println("Debug mode enabled");
 #endif
- // software setup
-        wifiErrorSignalActive = false;
+	// software setup
+	wifiErrorSignalActive = false;
 	statusWiFiConnection = WiFi.begin(ssid, pass);
 	if (statusWiFiConnection != WL_Connected) {
-	  //  turn the routines off to make the signal be 100% a warning sign
-	  //  Maybe add a pushbutton to bypass this later - would cycle to automatic "all routines on" mode
-	  deactivateRoutines();
-          signalConnectionFailure(DEBUG_SERIAL);
+		//  turn the routines off to make the signal be 100% a warning sign
+		//  Maybe add a pushbutton to bypass this later - would cycle to automatic "all routines on" mode
+		deactivateRoutines();
+		signalConnectionFailure(DEBUG_SERIAL);
 	} else {
-	  testConnection(DEBUG_SERIAL);
+		testConnection(DEBUG_SERIAL);
 	}
 }
 
