@@ -1,8 +1,7 @@
-#include <stdbool.h>
 #include "Arduino.h"
 #define MAXPOINTS 15
 #define LED_PINS 4
-extern static const int maxPoints;
+//extern static const int maxPoints;
 
 // initialize four leds as outputs
 // GPIO definitions
@@ -17,26 +16,32 @@ extern const int ledsPinsAvailable;
 
 extern const uint8_t ledPins[LED_PINS];
 
+extern bool isBunkerRoutineActive;
+extern bool isDroidRoutineActive;
+extern bool isTIERoutineActive;
+
 extern bool wifiErrorSignalActive;
 
 enum ErrorLEDDisplay {
-	WiFi = 0
+	LEDWiFiError = 0
 };
 
-// structure to pass data through the droidLights routine
-struct DroidLightsParameters {
-	bool isDroidSetup; // needs to be set to false every time the non-blocking routine completes a full run
-	int beeps;
-	int points[maxPoints] ; // there will never be more points than maxPoints anyway, and variable arrays introduce fragmentation in Arduinos that lead to early stops of the program. Variable array = bad.
-};
+typedef enum ErrorLEDDisplay ErrorLEDDisplay;
+
 
 // datastructure for routine
-struct DroidLightsParameters droidLightsParameters;
+extern struct DroidLightsParameters droidLightsParameters;
 
 // name-mangling in CPP
 #ifdef __cplusplus
 extern "C" {
 #endif
+	// structure to pass data through the droidLights routine
+	struct DroidLightsParameters {
+		bool isDroidSetup; // needs to be set to false every time the non-blocking routine completes a full run
+		int beeps;
+		int points[MAXPOINTS] ; // there will never be more points than maxPoints anyway, and variable arrays introduce fragmentation in Arduinos that lead to early stops of the program. Variable array = bad.
+	};
 	// helper utilities
 	void deactivateRoutines();
 	void blinkError(ErrorLEDDisplay);

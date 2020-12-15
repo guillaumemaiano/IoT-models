@@ -1,7 +1,6 @@
 #include "Lights.h"
 #include "Lights_Bunker.h"
 #include "Lights_Droid.h"
-#include "ModelWiFi.h"
 
 
 #define DEBUG_SERIAL true
@@ -25,9 +24,12 @@ extern const uint8_t ledPins[LED_PINS] = {
 };
 
 // triggers for the routines
-extern bool isBunkerRoutineActive = true;
-extern bool isDroidRoutineActive = true;
-extern bool isTIERoutineActive = true;
+extern bool isBunkerRoutineActive;
+extern bool isDroidRoutineActive;
+extern bool isTIERoutineActive;
+
+// parameters for the droid lights function
+struct DroidLightsParameters droidLightsParameters;
 
 // hardware setup
 void setup() {
@@ -45,21 +47,13 @@ void setup() {
 #endif
 	// software setup
 	wifiErrorSignalActive = false;
-	statusWiFiConnection = WiFi.begin(ssid, pass);
-	if (statusWiFiConnection != WL_Connected) {
-		//  turn the routines off to make the signal be 100% a warning sign
-		//  Maybe add a pushbutton to bypass this later - would cycle to automatic "all routines on" mode
-		deactivateRoutines();
-		signalConnectionFailure(DEBUG_SERIAL);
-	} else {
-		testConnection(DEBUG_SERIAL);
-	}
 }
 
 // main loop runs perpetually after setup has run
 void loop() {
 	if (wifiErrorSignalActive) {
-		blinkError(ErrorLEDDisplay.WiFi);
+	    ErrorLEDDisplay error = LEDWiFiError;
+	    blinkError(error);
 	}
 	if (isBunkerRoutineActive) {
 		bunkerLights();

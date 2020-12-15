@@ -4,15 +4,18 @@
 unsigned long cycleDuration = 0;
 unsigned long cycleStart = 0;
 
+bool wifiErrorSignalActive = false;
+
 void signalConnectionFailure(bool log){
 	wifiErrorSignalActive = true;
 	if (log) {
 		Serial.println("Couldn't get a wifi connection");
 	}
-	digitalWrite(blueLED_Xwing, HIGH); 
-	digitalWrite(redLED_Bunker, HIGH); 
-	digitalWrite(whiteLED_TIE, HIGH); 
-	digitalWrite(whiteLED_Xwing, HIGH); 
+	for (int ledToSwitchIndex = 0; ledToSwitchIndex < ledsPinsAvailable; ledToSwitchIndex++ ) {
+		uint8_t ledToSwitch =  ledPins[ledToSwitchIndex);
+		digitalWrite(ledToSwitch, 
+				LOW); 
+	}
 }
 
 // TODO:this probably needs to be extracted as soon as we add a non-wifi error status, as it will be a generic routine by then
@@ -20,7 +23,8 @@ void blinkError(ErrorLEDDisplay e) {
 	if (cycleStart <= 0) {
 		cycleStart = millis();
 		switch (e) {
-			case ErrorLEDDisplay.WiFi:
+			// ErrorLEDDisplay.WiFi:
+			case LEDWiFiError:
 				cycleDuration = 1000; // one-second
 				break;
 			default:
@@ -28,14 +32,26 @@ void blinkError(ErrorLEDDisplay e) {
 				return;
 		}
 	} else {
-		if (millis - cycleStart > cycleDuration) { // more time elapsed than the blink window
+		if (millis() - cycleStart > cycleDuration) { // more time elapsed than the blink window
 			cycleDuration = millis();
 			for (int ledToSwitchIndex = 0; ledToSwitchIndex < ledsPinsAvailable; ledToSwitchIndex++ ) {
-				uint8_t ledToSwitch =  ledsPinsAvailable[ledToSwitchIndex);
+				uint8_t ledToSwitch =  ledPins[ledToSwitchIndex);
 				digitalWrite(ledToSwitch, 
 						(digitalRead(ledToSwitch) == HIGH ? LOW : HIGH)); 
 			}
 		}
+	}
+}
+
+void setupWiFi(bool log) {
+	int statusWiFiConnection = WiFi.begin(ssid, pass);
+	if (statusWiFiConnection != WL_CONNECTED) {
+		//  turn the routines off to make the signal be 100% a warning sign
+		//  Maybe add a pushbutton to bypass this later - would cycle to automatic "all routines on" mode
+		deactivateRoutines();
+		signalConnectionFailure(log);
+	} else {
+		testConnection(log);
 	}
 }
 
