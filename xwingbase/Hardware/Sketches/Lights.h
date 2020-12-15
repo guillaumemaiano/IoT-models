@@ -9,6 +9,16 @@ extern const uint8_t whiteLED_Xwing; // = D2; // GPIO4
 extern const uint8_t blueLED_Xwing; // = D1; // GPIO5
 
 
+extern const int ledsPinsAvailable;
+
+extern const uint8_t ledPins[4];
+
+extern bool wifiErrorSignalActive;
+
+enum ErrorLEDDisplay {
+  WiFi = 0
+};
+
 // structure to pass data through the droidLights routine
 struct DroidLightsParameters {
 	bool isDroidSetup; // needs to be set to false every time the non-blocking routine completes a full run
@@ -23,6 +33,9 @@ struct DroidLightsParameters droidLightsParameters;
  #ifdef __cplusplus
  extern "C" {
  #endif
+// helper utilities
+ void deactivateRoutines();
+ void blinkError(ErrorLEDDisplay);
 // routines declaration
  void bunkerLights();
  void fighterTIELights();
