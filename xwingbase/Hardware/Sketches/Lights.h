@@ -1,3 +1,7 @@
+#include <stdbool.h>
+#include "Arduino.h"
+#define MAXPOINTS 15
+#define LED_PINS 4
 extern static const int maxPoints;
 
 // initialize four leds as outputs
@@ -11,7 +15,7 @@ extern const uint8_t blueLED_Xwing; // = D1; // GPIO5
 
 extern const int ledsPinsAvailable;
 
-extern const uint8_t ledPins[4];
+extern const uint8_t ledPins[LED_PINS];
 
 extern bool wifiErrorSignalActive;
 
