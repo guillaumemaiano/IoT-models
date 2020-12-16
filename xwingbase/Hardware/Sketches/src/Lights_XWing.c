@@ -3,10 +3,10 @@
 
 bool isXWingBoardRoutineActive = true;
 
-void prepareXWing(struct XWingLightsParameters*) {
+void prepareXWing(struct XWingLightsParameters* params) {
 
 }
 
-void xwingLights(struct XWingLightsParameters*)  {
+void xwingLights(struct XWingLightsParameters* params)  {
 
 }
