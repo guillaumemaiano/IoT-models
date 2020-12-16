@@ -11,7 +11,7 @@ void setupDroidLights(struct DroidLightsParameters *droidLightsParameters) {
 	srand(analogRead(0));
 	droidLightsParameters->beeps = (rand()+1)%maxPoints;
 	for (int point = 0; point < droidLightsParameters->beeps; point++) {
-	    int pointLength = rand()%4;//(0,4); // if 3, then point is a blank
+		int pointLength = rand()%4;//(0,4); // if 3, then point is a blank
 		if (pointLength == 3) {
 			droidLightsParameters->points[point] = 0; // standard empty point is 270ms long
 		} else {
@@ -87,9 +87,9 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 				break;
 			}
 		}
-       		 // shutdown the droid LED, lest it stays on during the separating pauses!
-               digitalWrite(blueLED_Xwing,
-                           LOW);
+		// shutdown the droid LED, lest it stays on during the separating pauses!
+		digitalWrite(blueLED_Xwing,
+				LOW);
 		if ( currentTimeInterval > intervals[currentPoint - 1] + sumOfDelays && currentTimeInterval < intervals[currentPoint] + sumOfDelays) {
 			setDroidLightStatus(currentPoint, droidLightsParameters);
 			break;
