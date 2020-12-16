@@ -44,6 +44,11 @@ void setup() {
 #ifdef DEBUG_SERIAL
 	Serial.begin(74880); // 115200 bauds in-source log works, but the reboot log demands 74880 bauds, so we'll use that instead
 	Serial.println("Debug mode enabled");
+	for (uint8_t t = 4; t > 0; t--) {
+		Serial.printf("[SETUP] WAIT %d...\n", t);
+		Serial.flush();
+		delay(1000);
+	}
 #endif
 	// software setup
 	wifiErrorSignalActive = false;
