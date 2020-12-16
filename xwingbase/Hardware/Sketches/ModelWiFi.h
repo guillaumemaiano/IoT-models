@@ -9,14 +9,8 @@
 
 // will be replaced before build by Makefile
 #define SERVER_NAME "SERVER-NAME"
-#define SERVER_IP "SERVER_IP"
 #define WIFI_SSID "WiFi-NAME"
 #define WIFI_PASS "WiFi-PASSWORD"
-
-char ssid[] = WIFI_SSID;
-char pass[] = WIFI_PASS;
-
-WiFiClient wifiClient;
 
 void setupWiFi(bool log);
 

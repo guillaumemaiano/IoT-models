@@ -1,7 +1,7 @@
 #include "Lights.h"
 #include "Lights_Bunker.h"
 #include "Lights_Droid.h"
-
+#include "ModelWiFi.h"
 
 #define DEBUG_SERIAL true
 
@@ -47,13 +47,18 @@ void setup() {
 #endif
 	// software setup
 	wifiErrorSignalActive = false;
+#ifdef DEBUG_SERIAL
+	setupWiFi(true);
+#else
+	setupWiFi(false);
+#endif
 }
 
 // main loop runs perpetually after setup has run
 void loop() {
 	if (wifiErrorSignalActive) {
-	    ErrorLEDDisplay error = LEDWiFiError;
-	    blinkError(error);
+		ErrorLEDDisplay error = LEDWiFiError;
+		blinkError(error);
 	}
 	if (isBunkerRoutineActive) {
 		bunkerLights();
