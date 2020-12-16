@@ -63,7 +63,7 @@ void droidLights(struct DroidLightsParameters * droidLightsParameters) {
 
 			intervalDuration += defaultDuration;
 		} else {
-			intervalDuration += points[currentPoint];
+			intervalDuration += droidLightsParameters->points[currentPoint];
 		}
 		intervals[currentPoint] = intervalDuration;
 
