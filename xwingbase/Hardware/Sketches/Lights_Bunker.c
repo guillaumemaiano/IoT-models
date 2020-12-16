@@ -16,8 +16,8 @@ void bunkerLights() {
 	// turn the led on for the first point
 
 	if (millis() > large_silence_interval + time_tracker_millis_bunker) {
-	digitalWrite(redLED_Bunker,
-			HIGH);
+		digitalWrite(redLED_Bunker,
+				HIGH);
 	}
 	// shut the led after the first point
 	if (millis() > large_silence_interval + short_emission_interval + time_tracker_millis_bunker) {
