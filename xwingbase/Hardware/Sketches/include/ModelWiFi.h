@@ -7,10 +7,12 @@
 // HTTP CLient allows (obviously) HTTP clients to be built.
 #include "ESP8266HTTPClient.h"
 
-// will be replaced before build by Makefile
-#define SERVER_NAME "SERVER-NAME"
-#define WIFI_SSID "WiFi-NAME"
-#define WIFI_PASS "WiFi-PASSWORD"
+// gitignore'd file that defines
+// #define SERVER_NAME "SERVER-NAME"
+// #define WIFI_SSID "WiFi-NAME"
+// #define WIFI_PASS "WiFi-PASSWORD"
+
+#include "secrets.h"
 
 void setupWiFi(bool log);
 

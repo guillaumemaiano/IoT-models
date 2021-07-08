@@ -24,15 +24,16 @@ extern const uint8_t ledPins[LED_PINS] = {
 };
 
 // triggers for the routines
-extern bool isBunkerRoutineActive;
-extern bool isDroidRoutineActive;
-extern bool isTIERoutineActive;
+//extern bool isXWingBoardRoutineActive;
+//extern bool isBunkerRoutineActive;
+//extern bool isDroidRoutineActive;
+//extern bool isTIERoutineActive;
 
 // parameters for the droid lights function
 struct DroidLightsParameters droidLightsParameters;
 
-// hardware setup
 void setup() {
+	// hardware setup
 	pinMode(whiteLED_TIE,
 			OUTPUT);
 	pinMode(blueLED_Xwing,
@@ -57,6 +58,8 @@ void setup() {
 #else
 	setupWiFi(false);
 #endif
+	//software setup
+	prepareXWing(&xwingLightsParameters);
 }
 
 // main loop runs perpetually after setup has run
@@ -75,5 +78,8 @@ void loop() {
 		// run-once or it will blink at loop-rate and look dimmed...
 		isTIERoutineActive = false;
 		fighterTIELights();
+	}
+	if (isXWingBoardRoutineActive) {
+		xwingLights(&xwingLightsParameters);
 	}
 }

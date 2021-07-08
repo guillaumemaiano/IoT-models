@@ -17,6 +17,7 @@ extern const int ledsPinsAvailable;
 extern const uint8_t ledPins[LED_PINS];
 
 extern bool isBunkerRoutineActive;
+extern bool isXWingBoardRoutineActive;
 extern bool isDroidRoutineActive;
 extern bool isTIERoutineActive;
 
@@ -28,9 +29,16 @@ enum ErrorLEDDisplay {
 
 typedef enum ErrorLEDDisplay ErrorLEDDisplay;
 
+// structure to pass data through the xwingLights routine
+struct XWingLightsParameters {
+	bool isXWingOn; // mirrors the HIGH/LOW state of the whiteLEDXWing
+	int cycleTime;
+};
+
 
 // datastructure for routine
 extern struct DroidLightsParameters droidLightsParameters;
+extern struct XWingLightsParameters xwingLightsParameters;
 
 // name-mangling in CPP
 #ifdef __cplusplus
@@ -48,6 +56,7 @@ extern "C" {
 	// routines declaration
 	void bunkerLights();
 	void fighterTIELights();
+        void xwingLights(struct XWingLightsParameters*);
 	void droidLights(struct DroidLightsParameters*);
 #ifdef __cplusplus
 }
