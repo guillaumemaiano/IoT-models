@@ -1,0 +1,25 @@
+int leftLedPin=13;
+int rightLedPin=13;
+int sensorPin=7;
+boolean val =0;
+
+void setup(){
+  pinMode(leftLedPin, OUTPUT);
+  pinMode(rightLedPin, OUTPUT);
+  pinMode(sensorPin, INPUT);
+  Serial.begin (9600);
+}
+  
+void loop (){
+  val =digitalRead(sensorPin);
+  Serial.println (val);
+  // when the sensor detects a signal above the threshold value, LED flashes
+  if (val==HIGH) {
+    digitalWrite(rightLedPin, HIGH);
+    digitalWrite(leftLedPin, HIGH);
+  }
+  else {
+    digitalWrite(leftLedPin, LOW);
+    digitalWrite(rightLedPin, LOW);
+  }
+}
